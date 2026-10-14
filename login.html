@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Login | Internship Portal{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <div class="auth-icon">🎓</div>
+  <h1>Welcome back</h1>
+  <p>Log in to manage your internship journey.</p>
+  <form method="post">
+    <label for="identifier">Email or company name</label>
+    <input id="identifier" type="text" name="identifier" autocomplete="username" placeholder="Enter email or company name" required>
+    <label for="password">Password</label>
+    <input id="password" type="password" name="password" autocomplete="current-password" required>
+    <button type="submit" class="full-button">Login to portal →</button>
+  </form>
+  <p>New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+</section>
+{% endblock %}

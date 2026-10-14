@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Internship Portal{% endblock %}
+{% block content %}
+<section class="welcome">
+  <div><p class="eyebrow">YOUR SPACE</p><h1>Hello, {{ session.get('name') }} 👋</h1>
+  <p class="muted">Welcome to your internship dashboard. Your role: <strong>{{ session.get('role')|title }}</strong></p></div>
+  <div class="welcome-icon">🚀</div>
+</section>
+<div class="cards">
+  <div class="stat"><span>Open internships</span><strong>{{ total_internships }}</strong><small>Available to explore</small></div>
+  {% if session.get('role') in ['student','company','admin'] %}
+  <div class="stat"><span>{% if session.get('role') == 'student' %}My applications{% else %}Applications{% endif %}</span><strong>{{ applications }}</strong><small>All application records</small></div>
+  {% endif %}
+  {% if session.get('role') in ['student','company','admin'] %}
+  <div class="stat"><span>Shortlisted</span><strong>{{ status_counts['Shortlisted'] }}</strong><small>Moving to the next step</small></div>
+  <div class="stat"><span>Selected</span><strong>{{ status_counts['Selected'] }}</strong><small>Successful applications</small></div>
+  {% endif %}
+</div>
+<section class="panel">
+  <h2>Quick actions</h2><p class="muted">Pick up where you left off.</p>
+  <div class="action-row">
+    <a class="button-link" href="{{ url_for('internships') }}">🔎 Find internships</a>
+    {% if session.get('role') in ['company','admin'] %}<a class="button-link secondary" href="{{ url_for('add_internship') }}">＋ Post an internship</a>{% endif %}
+    <a class="button-link secondary" href="{{ url_for('my_applications') }}">▤ View applications</a>
+  </div>
+</section>
+{% if session.get('role') in ['student','company','admin'] %}
+<section class="panel">
+  <h2>Application overview</h2>
+  <div class="status-grid">
+    {% for label, count in status_counts.items() %}
+    <div class="status-box"><span class="status status-{{ label|lower|replace(' ', '-') }}">{{ label }}</span><strong>{{ count }}</strong></div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

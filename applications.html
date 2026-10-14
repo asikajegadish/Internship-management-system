@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Applications | Internship Portal{% endblock %}
+{% block content %}
+<p class="eyebrow">APPLICATION TRACKER</p>
+<h1>{% if session.get('role') == 'student' %}My applications{% else %}Received applications{% endif %}</h1>
+<p class="muted">Track progress and keep every application in one place.</p>
+{% if not applications %}<div class="panel empty-state"><div>📄</div><h2>No applications yet</h2><p class="muted">Applications will appear here when available.</p><a class="button-link" href="{{ url_for('internships') }}">Browse internships</a></div>{% endif %}
+{% for a in applications %}
+<article class="panel application-row">
+  <div class="application-main"><h2>{{ a.title }}</h2>
+    {% if session.get('role') != 'student' %}<p><strong>Student:</strong> {{ a.student_name }}</p>{% endif %}
+    {% if session.get('role') == 'student' %}<p><strong>Company:</strong> {{ a.company_name }}</p>{% endif %}
+    <p class="muted">Applied: {{ a.applied_at }}</p>
+    {% if a.resume_path %}<a class="resume-link" href="{{ url_for('download_resume', application_id=a.id) }}">📄 View / download resume</a>{% endif %}
+  </div>
+  <div class="application-status"><span class="status status-{{ a.status|lower|replace(' ', '-') }}">{{ a.status }}</span></div>
+  {% if session.get('role') in ['company','admin'] %}
+  <form class="inline-form" method="post" action="{{ url_for('update_status', application_id=a.id) }}">
+    <label class="sr-only" for="status-{{ a.id }}">Application status</label>
+    <select id="status-{{ a.id }}" name="status">
+      {% for s in ['Under Review','Shortlisted','Selected','Rejected'] %}
+      <option value="{{ s }}" {% if a.status == s %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select><button type="submit">Update</button>
+  </form>
+  {% endif %}
+</article>
+{% endfor %}
+{% endblock %}

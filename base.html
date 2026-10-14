@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Internship Management System{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  {% if session.get('user_id') %}
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="sidebar-brand" href="{{ url_for('dashboard') }}"><span class="brand-icon">🎓</span><span>Internship<span class="brand-sub">MANAGEMENT PORTAL</span></span></a>
+      <div class="sidebar-section-label">MAIN MENU</div>
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <a class="side-link {% if request.endpoint == 'dashboard' %}active{% endif %}" href="{{ url_for('dashboard') }}"><span class="side-icon">▦</span>Dashboard</a>
+        <a class="side-link {% if request.endpoint == 'internships' %}active{% endif %}" href="{{ url_for('internships') }}"><span class="side-icon">⌕</span>Browse Internships</a>
+        <a class="side-link {% if request.endpoint == 'my_applications' %}active{% endif %}" href="{{ url_for('my_applications') }}"><span class="side-icon">▤</span>My Applications</a>
+        {% if session.get('role') in ['company', 'admin'] %}
+        <div class="sidebar-section-label">COMPANY TOOLS</div>
+        <a class="side-link {% if request.endpoint == 'add_internship' %}active{% endif %}" href="{{ url_for('add_internship') }}"><span class="side-icon">＋</span>Post Internship</a>
+        {% endif %}
+        {% if session.get('role') in ['faculty', 'admin'] %}
+        <div class="sidebar-section-label">FACULTY TOOLS</div>
+        <a class="side-link {% if request.endpoint == 'faculty_monitoring' %}active{% endif %}" href="{{ url_for('faculty_monitoring') }}"><span class="side-icon">◎</span>Faculty Monitoring</a>
+        {% endif %}
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="user-mini"><div class="user-avatar">{{ (session.get('name') or 'U')[0]|upper }}</div><div class="user-details"><strong>{{ session.get('name') }}</strong><span>{{ session.get('role')|title }}</span></div></div>
+        <a class="side-link logout-link" href="{{ url_for('logout') }}"><span class="side-icon">↪</span>Logout</a>
+      </div>
+    </aside>
+    <div class="sidebar-scrim" onclick="closeSidebar()"></div>
+    <div class="page-area">
+      <header class="app-topbar">
+        <button class="menu-toggle" type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" aria-controls="sidebar">☰</button>
+        <div><span class="topbar-title">Internship Portal</span><span class="topbar-subtitle">Find opportunities. Build your future.</span></div>
+        <div class="topbar-user">{{ session.get('name') }} <span class="role-pill">{{ session.get('role')|title }}</span></div>
+      </header>
+  {% else %}
+  <header class="topbar"><a class="brand" href="{{ url_for('login') }}">🎓 Internship Portal</a></header>
+  {% endif %}
+  <main class="container {% if session.get('user_id') %}app-container{% endif %}">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}{% for category, message in messages %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  {% if session.get('user_id') %}
+      <footer class="footer">Internship Portal · Learn, apply, grow</footer>
+    </div>
+  </div>
+  {% else %}
+  <footer class="footer">Internship Portal · Learn, apply, grow</footer>
+  {% endif %}
+  <script>
+    function toggleSidebar() { document.body.classList.toggle('sidebar-open'); }
+    function closeSidebar() { document.body.classList.remove('sidebar-open'); }
+  </script>
+</body>
+</html>

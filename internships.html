@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Internships | Internship Portal{% endblock %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">OPPORTUNITIES</p><h1>Find your next internship</h1><p class="muted">Search by role, company, or skills.</p></div></div>
+<form class="filter-form" method="get">
+  <div><label for="q">Search</label><input id="q" name="q" value="{{ q }}" placeholder="e.g. web developer"></div>
+  <div><label for="skill">Skill</label><input id="skill" name="skill" value="{{ skill }}" placeholder="e.g. Python"></div>
+  <div><label for="min_stipend">Minimum stipend (₹)</label><input id="min_stipend" type="number" min="0" step="1" name="min_stipend" value="{{ min_stipend }}" placeholder="Any"></div>
+  <button type="submit">Apply filters</button>
+  <a class="clear-link" href="{{ url_for('internships') }}">Clear</a>
+</form>
+{% if not internships %}<div class="panel empty-state"><div>🔍</div><h2>No internships found</h2><p class="muted">Try changing your search or clearing the filters.</p></div>{% endif %}
+<div class="listing">
+{% for item in internships %}
+  <article class="panel internship-card">
+    <div class="card-top"><span class="company-avatar">{{ item.company_name[:1]|upper }}</span><span class="status">Open</span></div>
+    <h2>{{ item.title }}</h2><p class="muted">Posted by {{ item.company_name }}</p>
+    <p class="description">{{ item.description }}</p>
+    <div class="detail-line"><strong>Skills</strong><span>{{ item.required_skills or 'Not specified' }}</span></div>
+    <div class="detail-line"><strong>Duration</strong><span>{{ item.duration or 'Not specified' }}</span></div>
+    <div class="detail-line"><strong>Monthly stipend</strong><span class="stipend">₹{{ item.stipend }}</span></div>
+    <div class="detail-line"><strong>Deadline</strong><span>{{ item.deadline or 'Not specified' }}</span></div>
+    {% if session.get('role') == 'student' %}
+      {% if item.id in applied_ids %}
+      <div class="resume-apply-form already-applied">
+        <p class="status">✓ You have already applied for this internship.</p>
+        <a class="button-link" href="{{ url_for('my_applications') }}">View my applications</a>
+      </div>
+      {% else %}
+      <form method="post" enctype="multipart/form-data" action="{{ url_for('apply', internship_id=item.id) }}" class="resume-apply-form">
+        <label for="resume-{{ item.id }}">Upload resume <strong>(required)</strong> <span class="muted">PDF, DOC, or DOCX · max 5 MB</span></label>
+        <input id="resume-{{ item.id }}" type="file" name="resume" accept=".pdf,.doc,.docx" required>
+        <button type="submit" class="full-button">Upload resume &amp; apply →</button>
+      </form>
+      {% endif %}
+    {% endif %}
+  </article>
+{% endfor %}
+</div>
+{% endblock %}

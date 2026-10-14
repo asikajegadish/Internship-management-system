@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Faculty Monitoring | Internship Portal{% endblock %}
+{% block content %}
+<p class="eyebrow">FACULTY WORKSPACE</p><h1>Faculty monitoring</h1>
+<p class="muted">Overview of student internship applications and current status.</p>
+<div class="panel table-wrap"><table>
+<thead><tr><th>Student</th><th>Internship</th><th>Company</th><th>Status</th><th>Applied on</th></tr></thead>
+<tbody>{% for a in applications %}
+<tr><td>{{ a.student_name }}</td><td>{{ a.title }}</td><td>{{ a.company_name }}</td><td><span class="status status-{{ a.status|lower|replace(' ', '-') }}">{{ a.status }}</span></td><td>{{ a.applied_at }}</td></tr>
+{% else %}<tr><td colspan="5">No records found.</td></tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

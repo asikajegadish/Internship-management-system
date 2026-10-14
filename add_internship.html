@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Post Internship | Internship Portal{% endblock %}
+{% block content %}
+<section class="form-card">
+  <p class="eyebrow">COMPANY WORKSPACE</p><h1>Post an internship</h1><p class="muted">Share a clear opportunity with students.</p>
+  <form method="post">
+    <label for="title">Internship title</label><input id="title" name="title" required maxlength="150" placeholder="e.g. Python Developer Intern">
+    <label for="description">Description</label><textarea id="description" name="description" rows="5" required placeholder="Describe the role and responsibilities"></textarea>
+    <label for="skills">Required skills</label><input id="skills" name="skills" placeholder="Python, SQL, communication">
+    <label for="duration">Duration</label><input id="duration" name="duration" placeholder="3 months">
+    <label for="stipend">Monthly stipend (₹)</label><input id="stipend" type="number" name="stipend" min="0" step="0.01" value="0">
+    <label for="deadline">Application deadline</label><input id="deadline" type="date" name="deadline">
+    <button type="submit" class="full-button">Publish internship →</button>
+  </form>
+</section>
+{% endblock %}

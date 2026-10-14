@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Register | Internship Portal{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <div class="auth-icon">✨</div><h1>Create account</h1><p>Join students and companies on one platform.</p>
+  <form method="post">
+    <label for="name">Full name / Company name</label><input id="name" name="name" maxlength="100" required>
+    <label for="email">Email</label><input id="email" type="email" name="email" autocomplete="email" required>
+    <label for="password">Password</label><input id="password" type="password" name="password" minlength="8" autocomplete="new-password" required>
+    <label for="role">Account type</label>
+    <select id="role" name="role"><option value="student">Student</option><option value="company">Company</option></select>
+    <button class="full-button" type="submit">Create account →</button>
+  </form>
+  <p>Already registered? <a href="{{ url_for('login') }}">Login</a></p>
+</section>
+{% endblock %}
